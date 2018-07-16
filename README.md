@@ -1,40 +1,46 @@
 # Go Cheat Sheet
 
 # Index
-1. [Basic Syntax](#basic-syntax)
-2. [Operators](#operators)
-    * [Arithmetic](#arithmetic)
-    * [Comparison](#comparison)
-    * [Logical](#logical)
-    * [Other](#other)
-3. [Declarations](#declarations)
-4. [Functions](#functions)
-    * [Functions as values and closures](#functions-as-values-and-closures)
-    * [Variadic Functions](#variadic-functions)
-5. [Built-in Types](#built-in-types)
-6. [Type Conversions](#type-conversions)
-7. [Packages](#packages)
-8. [Control structures](#control-structures)
-    * [If](#if)
-    * [Loops](#loops)
-    * [Switch](#switch)
-9. [Arrays, Slices, Ranges](#arrays-slices-ranges)
-    * [Arrays](#arrays)
-    * [Slices](#slices)
-    * [Operations on Arrays and Slices](#operations-on-arrays-and-slices)
-10. [Maps](#maps)
-11. [Structs](#structs)
-12. [Pointers](#pointers)
-13. [Interfaces](#interfaces)
-14. [Embedding](#embedding)
-15. [Errors](#errors)
-16. [Concurrency](#concurrency)
-    * [Goroutines](#goroutines)
-    * [Channels](#channels)
-    * [Channel Axioms](#channel-axioms)
-17. [Printing](#printing)
-18. [Snippets](#snippets)
-    * [Http-Server](#http-server)
+- [Go Cheat Sheet](#go-cheat-sheet)
+- [Index](#index)
+    - [Credits](#credits)
+    - [Go in a Nutshell](#go-in-a-nutshell)
+- [Basic Syntax](#basic-syntax)
+    - [Hello World](#hello-world)
+    - [Operators](#operators)
+        - [Arithmetic](#arithmetic)
+        - [Comparison](#comparison)
+        - [Logical](#logical)
+        - [Other](#other)
+    - [Declarations](#declarations)
+    - [Functions](#functions)
+        - [Functions As Values And Closures](#functions-as-values-and-closures)
+        - [Variadic Functions](#variadic-functions)
+    - [Built-in Types](#built-in-types)
+    - [Type Conversions](#type-conversions)
+    - [Packages](#packages)
+    - [Control structures](#control-structures)
+        - [If](#if)
+        - [Loops](#loops)
+        - [Switch](#switch)
+    - [Arrays, Slices, Ranges](#arrays-slices-ranges)
+        - [Arrays](#arrays)
+        - [Slices](#slices)
+        - [Operations on Arrays and Slices](#operations-on-arrays-and-slices)
+    - [Maps](#maps)
+    - [Structs](#structs)
+    - [Pointers](#pointers)
+    - [Interfaces](#interfaces)
+    - [Embedding](#embedding)
+    - [Errors](#errors)
+    - [Flow Control: defer, panic and recover](#flow-control-defer-panic-and-recover)
+- [Concurrency](#concurrency)
+    - [Goroutines](#goroutines)
+    - [Channels](#channels)
+        - [Channel Axioms](#channel-axioms)
+    - [Printing](#printing)
+- [Snippets](#snippets)
+    - [HTTP Server](#http-server)
 
 ## Credits
 
@@ -73,43 +79,43 @@ func main() {
 
 ## Operators
 ### Arithmetic
-|Operator|Description|
-|--------|-----------|
-|`+`|addition|
-|`-`|subtraction|
-|`*`|multiplication|
-|`/`|quotient|
-|`%`|remainder|
-|`&`|bitwise and|
-|`\|`|bitwise or|
-|`^`|bitwise xor|
-|`&^`|bit clear (and not)|
-|`<<`|left shift|
-|`>>`|right shift|
+| Operator | Description         |
+| -------- | ------------------- |
+| `+`      | addition            |
+| `-`      | subtraction         |
+| `*`      | multiplication      |
+| `/`      | quotient            |
+| `%`      | remainder           |
+| `&`      | bitwise and         |
+| `\|`     | bitwise or          |
+| `^`      | bitwise xor         |
+| `&^`     | bit clear (and not) |
+| `<<`     | left shift          |
+| `>>`     | right shift         |
 
 ### Comparison
-|Operator|Description|
-|--------|-----------|
-|`==`|equal|
-|`!=`|not equal|
-|`<`|less than|
-|`<=`|less than or equal|
-|`>`|greater than|
-|`>=`|greater than or equal|
+| Operator | Description           |
+| -------- | --------------------- |
+| `==`     | equal                 |
+| `!=`     | not equal             |
+| `<`      | less than             |
+| `<=`     | less than or equal    |
+| `>`      | greater than          |
+| `>=`     | greater than or equal |
 
 ### Logical
-|Operator|Description|
-|--------|-----------|
-|`&&`|logical and|
-|`\|\|`|logical or|
-|`!`|logical not|
+| Operator | Description |
+| -------- | ----------- |
+| `&&`     | logical and |
+| `\|\|`   | logical or  |
+| `!`      | logical not |
 
 ### Other
-|Operator|Description|
-|--------|-----------|
-|`&`|address of / create pointer|
-|`*`|dereference pointer|
-|`<-`|send / receive operator (see 'Channels' below)|
+| Operator | Description                                    |
+| -------- | ---------------------------------------------- |
+| `&`      | address of / create pointer                    |
+| `*`      | dereference pointer                            |
+| `<-`     | send / receive operator (see 'Channels' below) |
 
 ## Declarations
 Type goes after identifier!
@@ -185,11 +191,10 @@ func another_scope() func() int{
 func outer() (func() int, int) {
     outer_var := 2
     inner := func() int {
-        outer_var += 99 // attempt to mutate outer_var from outer scope
-        return outer_var // => 101 (but outer_var is a newly redefined
-                         //         variable visible only inside inner)
+        outer_var += 99 
+        return outer_var 
     }
-    return inner, outer_var // => 101, 2 (outer_var is still 2, not mutated by inner!)
+    return inner, outer_var  
 }
 ```
 
@@ -479,7 +484,7 @@ type Awesomizer interface {
 // types do *not* declare to implement interfaces
 type Foo struct {}
 
-// instead, types implicitly satisfy an interface if they implement all required methods
+// instead, types implicitly satisfy an interface if they implement *ALL*  required methods
 func (foo Foo) Awesomize() string {
     return "Awesome!"
 }
@@ -514,7 +519,7 @@ var logger *log.Logger = server.Logger
 ```
 
 ## Errors
-There is no exception handling. Functions that might produce an error just declare an additional return value of type `Error`. This is the `Error` interface:
+There is no exception handling. Functions that might produce an error just declare an additional return value of type `Error`. This is the  (built-in) `Error` interface:
 ```go
 type error interface {
     Error() string
@@ -535,6 +540,60 @@ func main() {
     }
 }
 ```
+
+
+## Flow Control: defer, panic and recover
+Check this on [Go Blog](https://blog.golang.org/defer-panic-and-recover), example:
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    f()
+    fmt.Println("Returned normally from f.")
+}
+
+func f() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered in f", r)
+        }
+    }()
+    fmt.Println("Calling g.")
+    g(0)
+    fmt.Println("Returned normally from g.")
+}
+
+func g(i int) {
+    if i > 3 {
+        fmt.Println("Panicking!")
+        panic(fmt.Sprintf("%v", i))
+    }
+    defer fmt.Println("Defer in g", i)
+    fmt.Println("Printing in g", i)
+    g(i + 1)
+}
+
+```
+
+outout 
+``` go
+Calling g.
+Printing in g 0
+Printing in g 1
+Printing in g 2
+Printing in g 3
+Panicking!
+Defer in g 3
+Defer in g 2
+Defer in g 1
+Defer in g 0
+Recovered in f 4
+Returned normally from f.
+```
+
 
 # Concurrency
 
