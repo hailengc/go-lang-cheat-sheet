@@ -190,14 +190,15 @@ func another_scope() func() int{
 // Closure
 func outer() (func() int, int) {
     outer_var := 2
-    inner := func() int {
+    // anonymouse function is returned
+    return func() int {
         outer_var += 99 
         return outer_var 
     }
-    return inner, outer_var  
+    
 }
 
-i, _ := outer()
+i := outer()
 i()  # 101
 i()  # 200
 ```
