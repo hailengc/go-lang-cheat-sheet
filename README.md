@@ -187,7 +187,7 @@ func another_scope() func() int{
 }
 
 
-// Closures: don't mutate outer vars, instead redefine them!
+// Closure
 func outer() (func() int, int) {
     outer_var := 2
     inner := func() int {
@@ -196,6 +196,10 @@ func outer() (func() int, int) {
     }
     return inner, outer_var  
 }
+
+i, _ := outer()
+i()  # 101
+i()  # 200
 ```
 
 ### Variadic Functions
